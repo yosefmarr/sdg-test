@@ -1,4 +1,5 @@
 'use strict';
+const { QueryTypes } = require('sequelize');
 const bcrypt = require('bcrypt');
 const dotenv = require('dotenv');
 dotenv.config();
@@ -6,6 +7,15 @@ dotenv.config();
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
+    const users = await queryInterface.sequelize.query(
+      `SELECT id FROM \`user\`;`,
+      { type: QueryTypes.SELECT }
+    );
+
+    if (users.length > 0) {
+      throw new Error('User is already registered in the db');
+    }
+
     const hash_password = bcrypt.hashSync(
       process.env.ADMIN_DASHBOARD_PASSWORD,
       bcrypt.genSaltSync(10)
