@@ -8,6 +8,12 @@ module.exports = {
       await queryInterface.createTable(
         'permission_access',
         {
+          id: {
+            type: Sequelize.INTEGER,
+            autoIncrement: true,
+            primaryKey: true,
+            allowNull: false,
+          },
           permission_id: {
             type: Sequelize.INTEGER,
             onUpdate: 'CASCADE',

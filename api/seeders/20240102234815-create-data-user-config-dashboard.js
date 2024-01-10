@@ -7,15 +7,6 @@ dotenv.config();
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    const users = await queryInterface.sequelize.query(
-      `SELECT id FROM \`user\`;`,
-      { type: QueryTypes.SELECT }
-    );
-
-    if (users.length > 0) {
-      throw new Error('User is already registered in the db');
-    }
-
     const hash_password = bcrypt.hashSync(
       process.env.ADMIN_DASHBOARD_PASSWORD,
       bcrypt.genSaltSync(10)
@@ -62,10 +53,11 @@ module.exports = {
         { transaction }
       );
 
-      const user_id = await queryInterface.bulkInsert(
+      await queryInterface.bulkInsert(
         'user',
         [
           {
+            id: 1,
             first_name: 'Admin',
             last_name: 'SDG',
             email: 'admin@sdg.com',
@@ -74,16 +66,17 @@ module.exports = {
             updated_at: new Date(),
           },
         ],
-        { transaction, returning: ['id'] }
+        { transaction }
       );
 
-      const config_id = await queryInterface.bulkInsert(
+      await queryInterface.bulkInsert(
         'config',
         [
           {
+            id: 1,
             language: 'es',
-            created_by: user_id,
-            updated_by: user_id,
+            created_by: 1,
+            updated_by: 1,
             created_at: new Date(),
             updated_at: new Date(),
           },
@@ -91,14 +84,15 @@ module.exports = {
         { transaction, returning: ['id'] }
       );
 
-      const dashboard_id = await queryInterface.bulkInsert(
+      await queryInterface.bulkInsert(
         'dashboard',
         [
           {
+            id: 1,
             name: 'Admin Dashboard',
             description: 'Dashboard exclusively for administrative use',
-            created_by: user_id,
-            updated_by: user_id,
+            created_by: 1,
+            updated_by: 1,
             created_at: new Date(),
             updated_at: new Date(),
           },
@@ -109,11 +103,11 @@ module.exports = {
       await queryInterface.bulkUpdate(
         'user',
         {
-          config_id,
-          dashboard_id,
+          config_id: 1,
+          dashboard_id: 1,
         },
         {
-          id: user_id,
+          id: 1,
         },
         { transaction }
       );

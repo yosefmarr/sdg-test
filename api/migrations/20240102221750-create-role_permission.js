@@ -8,6 +8,12 @@ module.exports = {
       await queryInterface.createTable(
         'role_permission',
         {
+          id: {
+            type: Sequelize.INTEGER,
+            autoIncrement: true,
+            primaryKey: true,
+            allowNull: false,
+          },
           role_id: {
             type: Sequelize.INTEGER,
             allowNull: false,
