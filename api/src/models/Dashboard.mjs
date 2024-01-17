@@ -1,6 +1,6 @@
-const Config = (sequelize, DataTypes) => {
+const Dashboard = (sequelize, DataTypes) => {
   return sequelize.define(
-    'config',
+    'dashboard',
     {
       id: {
         type: DataTypes.INTEGER,
@@ -8,15 +8,30 @@ const Config = (sequelize, DataTypes) => {
         primaryKey: true,
         allowNull: false,
       },
-      language: {
-        type: DataTypes.ENUM('es', 'en'),
-        defaultValue: 'es',
+      name: {
+        type: DataTypes.STRING(50),
         allowNull: false,
       },
-      session_time_out: {
-        type: DataTypes.INTEGER,
-        defaultValue: 1440 /* 24 hours in minutes */,
+      description: {
+        type: DataTypes.STRING(120),
         allowNull: false,
+      },
+      count: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+        allowNull: false,
+      },
+      starting_count: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      min_count: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      max_count: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
       },
       created_by: {
         type: DataTypes.INTEGER,
@@ -52,10 +67,10 @@ const Config = (sequelize, DataTypes) => {
   );
 };
 
-export const associate = ({ Config, User }) => {
-  Config.belongsTo(User, { foreignKey: 'created_by' });
-  Config.belongsTo(User, { foreignKey: 'updated_by' });
-  User.hasOne(Config, { foreignKey: 'config_id' });
+export const associate = ({ Dashboard, User }) => {
+  Dashboard.belongsTo(User, { foreignKey: 'created_by' });
+  Dashboard.belongsTo(User, { foreignKey: 'updated_by' });
+  User.hasOne(Dashboard, { foreignKey: 'dashboard_id' });
 };
 
-export default Config;
+export default Dashboard;
