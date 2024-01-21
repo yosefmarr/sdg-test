@@ -70,7 +70,7 @@ const Dashboard = (sequelize, DataTypes) => {
 export const associate = ({ Dashboard, User }) => {
   Dashboard.belongsTo(User, { foreignKey: 'created_by' });
   Dashboard.belongsTo(User, { foreignKey: 'updated_by' });
-  User.hasOne(Dashboard, { foreignKey: 'dashboard_id' });
+  User.hasOne(Dashboard, { foreignKey: 'id' });
 };
 
 export default Dashboard;

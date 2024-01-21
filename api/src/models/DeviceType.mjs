@@ -53,7 +53,7 @@ const DeviceType = (sequelize, DataTypes) => {
 export const associate = ({ DeviceType, User, UserDevice }) => {
   DeviceType.belongsTo(User, { foreignKey: 'created_by' });
   DeviceType.belongsTo(User, { foreignKey: 'updated_by' });
-  UserDevice.hasOne(DeviceType, { foreignKey: 'device_type_id' });
+  UserDevice.hasOne(DeviceType, { foreignKey: 'id' });
 };
 
 export default DeviceType;

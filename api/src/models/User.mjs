@@ -80,11 +80,19 @@ const User = (sequelize, DataTypes) => {
   );
 };
 
-export const associate = ({ User, Config, Dashboard }) => {
+export const associate = ({
+  User,
+  Config,
+  Dashboard,
+  UserDevice,
+  UserRole,
+}) => {
   User.belongsTo(User, { foreignKey: 'created_by' });
   User.belongsTo(User, { foreignKey: 'updated_by' });
   User.belongsTo(Config, { foreignKey: 'config_id' });
   User.belongsTo(Dashboard, { foreignKey: 'dashboard_id' });
+  UserDevice.hasOne(User, { foreignKey: 'id' });
+  UserRole.hasOne(User, { foreignKey: 'id' });
 };
 
 export default User;

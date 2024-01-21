@@ -11,6 +11,7 @@ const toPascalCase = (str) => {
 
 const baseFileName = basename(import.meta.url);
 const db = {};
+const associations = [];
 
 export const initDBModels = async () => {
   const files = readdirSync(new URL('.', import.meta.url).pathname).filter(
@@ -28,14 +29,15 @@ export const initDBModels = async () => {
       join(new URL('.', import.meta.url).pathname, file)
     );
     const model = module.default(sequelize, DataTypes);
+    const associate = module.associate;
     db[toPascalCase(model.name)] = model;
+    if (associate) {
+      associations.push(associate);
+    }
   }
 
-  Object.keys(db).forEach((modelName) => {
-    modelName = toPascalCase(modelName);
-    if (db[modelName].associate) {
-      db[modelName].associate(db);
-    }
+  associations.forEach((associate) => {
+    associate(db);
   });
 
   db.sequelize = sequelize;

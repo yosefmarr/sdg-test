@@ -1,6 +1,6 @@
-const Config = (sequelize, DataTypes) => {
+const Role = (sequelize, DataTypes) => {
   return sequelize.define(
-    'config',
+    'role',
     {
       id: {
         type: DataTypes.INTEGER,
@@ -8,14 +8,8 @@ const Config = (sequelize, DataTypes) => {
         primaryKey: true,
         allowNull: false,
       },
-      language: {
-        type: DataTypes.ENUM('es', 'en'),
-        defaultValue: 'es',
-        allowNull: false,
-      },
-      session_time_out: {
-        type: DataTypes.INTEGER,
-        defaultValue: 1440 /* 24 hours in minutes */,
+      name: {
+        type: DataTypes.STRING(50),
         allowNull: false,
       },
       created_by: {
@@ -52,10 +46,11 @@ const Config = (sequelize, DataTypes) => {
   );
 };
 
-export const associate = ({ Config, User }) => {
-  Config.belongsTo(User, { foreignKey: 'created_by' });
-  Config.belongsTo(User, { foreignKey: 'updated_by' });
-  User.hasOne(Config, { foreignKey: 'id' });
+export const associate = ({ Role, User, UserRole, RolePermission }) => {
+  Role.belongsTo(User, { foreignKey: 'created_by' });
+  Role.belongsTo(User, { foreignKey: 'updated_by' });
+  UserRole.hasOne(Role, { foreignKey: 'id' });
+  RolePermission.hasOne(Role, { foreignKey: 'id' });
 };
 
-export default Config;
+export default Role;

@@ -1,6 +1,6 @@
-const Config = (sequelize, DataTypes) => {
+const PermissionAccess = (sequelize, DataTypes) => {
   return sequelize.define(
-    'config',
+    'permission_access',
     {
       id: {
         type: DataTypes.INTEGER,
@@ -8,15 +8,23 @@ const Config = (sequelize, DataTypes) => {
         primaryKey: true,
         allowNull: false,
       },
-      language: {
-        type: DataTypes.ENUM('es', 'en'),
-        defaultValue: 'es',
-        allowNull: false,
-      },
-      session_time_out: {
+      permission_id: {
         type: DataTypes.INTEGER,
-        defaultValue: 1440 /* 24 hours in minutes */,
+        onUpdate: 'CASCADE',
         allowNull: false,
+        references: {
+          model: 'permission',
+          key: 'id',
+        },
+      },
+      access_id: {
+        type: DataTypes.INTEGER,
+        onUpdate: 'CASCADE',
+        allowNull: false,
+        references: {
+          model: 'access',
+          key: 'id',
+        },
       },
       created_by: {
         type: DataTypes.INTEGER,
@@ -52,10 +60,11 @@ const Config = (sequelize, DataTypes) => {
   );
 };
 
-export const associate = ({ Config, User }) => {
-  Config.belongsTo(User, { foreignKey: 'created_by' });
-  Config.belongsTo(User, { foreignKey: 'updated_by' });
-  User.hasOne(Config, { foreignKey: 'id' });
+export const associate = ({ PermissionAccess, User, Permission, Access }) => {
+  PermissionAccess.belongsTo(User, { foreignKey: 'created_by' });
+  PermissionAccess.belongsTo(User, { foreignKey: 'updated_by' });
+  PermissionAccess.belongsTo(Permission, { foreignKey: 'permission_id' });
+  PermissionAccess.belongsTo(Access, { foreignKey: 'access_id' });
 };
 
-export default Config;
+export default PermissionAccess;

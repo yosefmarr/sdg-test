@@ -1,21 +1,18 @@
-const Config = (sequelize, DataTypes) => {
+const Device = (sequelize, DataTypes) => {
   return sequelize.define(
-    'config',
+    'device',
     {
       id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
+        type: DataTypes.STRING(100),
         primaryKey: true,
         allowNull: false,
       },
-      language: {
-        type: DataTypes.ENUM('es', 'en'),
-        defaultValue: 'es',
+      name: {
+        type: DataTypes.STRING(50),
         allowNull: false,
       },
-      session_time_out: {
-        type: DataTypes.INTEGER,
-        defaultValue: 1440 /* 24 hours in minutes */,
+      description: {
+        type: DataTypes.STRING(120),
         allowNull: false,
       },
       created_by: {
@@ -52,10 +49,10 @@ const Config = (sequelize, DataTypes) => {
   );
 };
 
-export const associate = ({ Config, User }) => {
-  Config.belongsTo(User, { foreignKey: 'created_by' });
-  Config.belongsTo(User, { foreignKey: 'updated_by' });
-  User.hasOne(Config, { foreignKey: 'id' });
+export const associate = ({ Device, User, UserDevice }) => {
+  Device.belongsTo(User, { foreignKey: 'created_by' });
+  Device.belongsTo(User, { foreignKey: 'updated_by' });
+  UserDevice.hasOne(Device, { foreignKey: 'id' });
 };
 
-export default Config;
+export default Device;

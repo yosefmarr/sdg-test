@@ -1,6 +1,6 @@
-const Config = (sequelize, DataTypes) => {
+const UserDevice = (sequelize, DataTypes) => {
   return sequelize.define(
-    'config',
+    'user_device',
     {
       id: {
         type: DataTypes.INTEGER,
@@ -8,15 +8,29 @@ const Config = (sequelize, DataTypes) => {
         primaryKey: true,
         allowNull: false,
       },
-      language: {
-        type: DataTypes.ENUM('es', 'en'),
-        defaultValue: 'es',
-        allowNull: false,
-      },
-      session_time_out: {
+      user_id: {
         type: DataTypes.INTEGER,
-        defaultValue: 1440 /* 24 hours in minutes */,
         allowNull: false,
+        references: {
+          model: 'user',
+          key: 'id',
+        },
+      },
+      device_id: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+        references: {
+          model: 'device',
+          key: 'id',
+        },
+      },
+      device_type_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'device_type',
+          key: 'id',
+        },
       },
       created_by: {
         type: DataTypes.INTEGER,
@@ -52,10 +66,12 @@ const Config = (sequelize, DataTypes) => {
   );
 };
 
-export const associate = ({ Config, User }) => {
-  Config.belongsTo(User, { foreignKey: 'created_by' });
-  Config.belongsTo(User, { foreignKey: 'updated_by' });
-  User.hasOne(Config, { foreignKey: 'id' });
+export const associate = ({ UserDevice, User, Device, DeviceType }) => {
+  UserDevice.belongsTo(User, { foreignKey: 'created_by' });
+  UserDevice.belongsTo(User, { foreignKey: 'updated_by' });
+  UserDevice.belongsTo(User, { foreignKey: 'user_id' });
+  UserDevice.belongsTo(Device, { foreignKey: 'device_id' });
+  UserDevice.belongsTo(DeviceType, { foreignKey: 'device_type_id' });
 };
 
-export default Config;
+export default UserDevice;

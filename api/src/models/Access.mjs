@@ -1,6 +1,6 @@
-const Config = (sequelize, DataTypes) => {
+const Access = (sequelize, DataTypes) => {
   return sequelize.define(
-    'config',
+    'access',
     {
       id: {
         type: DataTypes.INTEGER,
@@ -8,15 +8,14 @@ const Config = (sequelize, DataTypes) => {
         primaryKey: true,
         allowNull: false,
       },
-      language: {
-        type: DataTypes.ENUM('es', 'en'),
-        defaultValue: 'es',
+      action: {
+        type: DataTypes.STRING(50),
         allowNull: false,
+        unique: true,
       },
-      session_time_out: {
-        type: DataTypes.INTEGER,
-        defaultValue: 1440 /* 24 hours in minutes */,
-        allowNull: false,
+      description: {
+        type: DataTypes.STRING(120),
+        allowNull: true,
       },
       created_by: {
         type: DataTypes.INTEGER,
@@ -52,10 +51,10 @@ const Config = (sequelize, DataTypes) => {
   );
 };
 
-export const associate = ({ Config, User }) => {
-  Config.belongsTo(User, { foreignKey: 'created_by' });
-  Config.belongsTo(User, { foreignKey: 'updated_by' });
-  User.hasOne(Config, { foreignKey: 'id' });
+export const associate = ({ Access, User, PermissionAccess }) => {
+  Access.belongsTo(User, { foreignKey: 'created_by' });
+  Access.belongsTo(User, { foreignKey: 'updated_by' });
+  PermissionAccess.hasOne(Access, { foreignKey: 'id' });
 };
 
-export default Config;
+export default Access;

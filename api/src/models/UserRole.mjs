@@ -1,6 +1,6 @@
-const Config = (sequelize, DataTypes) => {
+const UserRole = (sequelize, DataTypes) => {
   return sequelize.define(
-    'config',
+    'user_role',
     {
       id: {
         type: DataTypes.INTEGER,
@@ -8,15 +8,21 @@ const Config = (sequelize, DataTypes) => {
         primaryKey: true,
         allowNull: false,
       },
-      language: {
-        type: DataTypes.ENUM('es', 'en'),
-        defaultValue: 'es',
-        allowNull: false,
-      },
-      session_time_out: {
+      user_id: {
         type: DataTypes.INTEGER,
-        defaultValue: 1440 /* 24 hours in minutes */,
         allowNull: false,
+        references: {
+          model: 'user',
+          key: 'id',
+        },
+      },
+      role_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'role',
+          key: 'id',
+        },
       },
       created_by: {
         type: DataTypes.INTEGER,
@@ -52,10 +58,11 @@ const Config = (sequelize, DataTypes) => {
   );
 };
 
-export const associate = ({ Config, User }) => {
-  Config.belongsTo(User, { foreignKey: 'created_by' });
-  Config.belongsTo(User, { foreignKey: 'updated_by' });
-  User.hasOne(Config, { foreignKey: 'id' });
+export const associate = ({ UserRole, User, Role }) => {
+  UserRole.belongsTo(User, { foreignKey: 'created_by' });
+  UserRole.belongsTo(User, { foreignKey: 'updated_by' });
+  UserRole.belongsTo(User, { foreignKey: 'user_id' });
+  UserRole.belongsTo(Role, { foreignKey: 'role_id' });
 };
 
-export default Config;
+export default UserRole;
